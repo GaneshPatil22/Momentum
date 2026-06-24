@@ -96,8 +96,8 @@ flowchart TB
     Task["TaskItem @Model"]
   end
 
-  UI -->|"@Query"| Container
-  UI -->|".environment"| State
+  UI -->|@Query| Container
+  UI -->|.environment| State
   State --> Container
   Container --> Initiative
   Container --> Task
