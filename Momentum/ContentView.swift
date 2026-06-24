@@ -6,19 +6,31 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            Tab("Today", systemImage: "sun.max") {
+                TodayView()
+            }
+            Tab("Initiatives", systemImage: "list.bullet.rectangle") {
+                InitiativesListView()
+            }
+            Tab("Momentum", systemImage: "chart.line.uptrend.xyaxis") {
+                MomentumDashboardView()
+            }
         }
-        .padding()
+        .tint(AppColor.accent)
     }
 }
 
 #Preview {
-    ContentView()
+    let container = try! ModelContainer(
+        for: Initiative.self, TaskItem.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    return ContentView()
+        .modelContainer(container)
+        .environment(ActivityService(context: container.mainContext))
 }

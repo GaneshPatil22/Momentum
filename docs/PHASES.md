@@ -4,7 +4,8 @@
 
 | Phase | Theme | Status |
 |---|---|---|
-| [P1](#p1--core-loop-on-iphone) | Core loop on iPhone | not started |
+| [P1](#p1--core-loop-on-iphone) | Core loop on iPhone | ✅ done |
+| [P1.5](#p15--visual-polish--light-mode) | Visual polish + light mode (matches [mockup.html](mockup.html)) | in progress |
 | [P2](#p2--ipad--adaptive) | iPad / adaptive | not started |
 | [P3](#p3--cloudkit-sync) | CloudKit sync | not started |
 | [P4](#p4--momentum-visuals) | Momentum visuals | not started |
@@ -36,6 +37,33 @@ The minimum thing that is **already useful** to the dogfooder.
 - Quit & relaunch → everything is there.
 
 **Out of P1:** iPad layout, pulse rings/animation, CloudKit, notifications, AI.
+
+---
+
+## P1.5 — Visual polish + light mode
+
+Make P1 look like [`docs/mockup.html`](mockup.html) and ship both appearances. **Behavior is unchanged** — same models, services, navigation logic. This is a presentation-layer phase.
+
+Full details and deltas in [UI-REFERENCE.md](UI-REFERENCE.md).
+
+**Deliverables**
+- Semantic color tokens (`Theme.swift`) with dark + light variants — pulse cold becomes gray (not red), pulse active is teal-green, cooling is amber.
+- `PulseDot` gains a halo (low-alpha ring) for active/cooling.
+- `DaysSinceLabel` becomes stacked: big rounded number + tiny uppercase "DAYS" / "DAY" / "TODAY".
+- New `AddBar` component (dashed-border quick-add row).
+- New `PulseRing` component (static partial-fill arc, used in detail header — animation lands in P4).
+- `InitiativeRow` cold-row tint switches to a gray horizontal gradient.
+- `NewInitiativeSheet` color palette updated to mockup hexes.
+- Root wraps in `TabView` — three tabs: Today · Initiatives · Momentum. Today and Momentum ship as **placeholder views** ("Coming in P5" / "Coming in P4") so the tab bar feels real.
+- Whole app verified against light + dark previews and on a simulator with both appearances.
+
+**Exit criteria**
+- Side-by-side comparison: app looks like the mockup in dark mode and looks coherent (not just inverted) in light mode.
+- Pulse-dot halo and stacked days readout are visible everywhere they appear.
+- Cold rows tint gray, not red.
+- All P1 behavior still works (add/check/persist/etc.).
+
+**Out of P1.5:** Real Today screen logic, real Momentum dashboard, iPad split view, settings, AI, animated rings — those stay in their original phases.
 
 ---
 

@@ -1,0 +1,533 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Momentum — UI & Flow Reference</title>
+<style>
+  :root{
+    --bg:#0E1116; --surface:#171B22; --surface-2:#1E232C; --surface-3:#262C36;
+    --hairline:#2A313C; --text:#EEF2F6; --text-2:#9BA6B4; --text-3:#69707C;
+    --accent:#5B8DEF;
+    --active:#2FD4A7; --cooling:#F6B23C; --cold:#6B7686; --danger:#FF6B6B;
+    --font-ui:-apple-system,"SF Pro Text","Segoe UI",system-ui,sans-serif;
+    --font-round:ui-rounded,"SF Pro Rounded","SF Pro Text",-apple-system,system-ui,sans-serif;
+    --r-card:16px; --r-row:12px; --r-sheet:26px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#070A0E;color:var(--text);font-family:var(--font-ui);
+    -webkit-font-smoothing:antialiased;line-height:1.45;padding:40px 20px 80px}
+  .page{max-width:1180px;margin:0 auto}
+
+  .doc-h{margin-bottom:8px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .doc-sub{color:var(--text-2);font-size:15px;max-width:680px;margin-bottom:28px}
+  .doc-sub b{color:var(--text)}
+  .section-eyebrow{display:flex;align-items:center;gap:10px;margin:46px 0 18px;
+    color:var(--text-2);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+  .section-eyebrow::after{content:"";flex:1;height:1px;background:var(--hairline)}
+  .caption{color:var(--text-3);font-size:13px;margin:14px 0 0;max-width:640px}
+  .caption code{color:var(--accent);font-family:var(--font-round);font-size:12px}
+
+  .legend{display:flex;gap:22px;flex-wrap:wrap;background:var(--surface);
+    border:1px solid var(--hairline);border-radius:14px;padding:16px 20px;margin-bottom:8px}
+  .legend .item{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text-2)}
+  .legend .dot{width:11px;height:11px;border-radius:50%}
+  .legend .note{color:var(--text-3);font-size:12px;margin-left:auto}
+
+  .stage{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  .device-label{font-size:12px;color:var(--text-3);text-align:center;margin-top:12px;letter-spacing:.02em}
+
+  .iphone{width:340px;height:724px;background:var(--bg);border-radius:46px;
+    border:10px solid #20262F;position:relative;overflow:hidden;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,.7)}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:118px;height:26px;background:#20262F;border-radius:0 0 16px 16px;z-index:60}
+  .statusbar{height:42px;display:flex;align-items:flex-end;justify-content:space-between;
+    padding:0 24px 6px;font-size:13px;font-weight:600;position:relative;z-index:55}
+  .statusbar .ico{display:flex;gap:5px;align-items:center}
+
+  .screens{position:absolute;inset:42px 0 0 0;overflow:hidden}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;
+    background:var(--bg);overflow-y:auto;opacity:0;pointer-events:none;
+    transform:translateX(0)}
+  .screen.active{opacity:1;pointer-events:auto;z-index:10}
+  .screen.push{transform:translateX(100%);transition:transform .32s cubic-bezier(.32,.72,0,1),opacity .2s}
+  .screen.push.active{transform:translateX(0)}
+  @media (prefers-reduced-motion:reduce){.screen,.screen.push{transition:none!important}}
+
+  .navbar{padding:8px 18px 4px;display:flex;align-items:center;gap:8px;min-height:44px}
+  .navbar .back{color:var(--accent);font-size:15px;display:flex;align-items:center;gap:2px;
+    background:none;border:0;cursor:pointer;font-family:var(--font-ui)}
+  .navbar .nav-action{margin-left:auto;color:var(--accent);background:none;border:0;
+    cursor:pointer;display:flex;align-items:center;gap:6px;font-size:15px;font-family:var(--font-ui)}
+  .large-title{padding:2px 20px 10px;font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .nav-mini{font-size:16px;font-weight:600;flex:1;text-align:center}
+
+  .body-pad{padding:0 16px 18px}
+
+  .group{background:var(--surface);border:1px solid var(--hairline);
+    border-radius:var(--r-card);overflow:hidden}
+  .group + .group-h, .group-h{color:var(--text-3);font-size:12px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;margin:20px 4px 8px}
+  .row{display:flex;align-items:center;gap:13px;padding:13px 15px;
+    border-bottom:1px solid var(--hairline);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;font-family:var(--font-ui);color:var(--text)}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--surface-2)}
+  .row.attention{background:linear-gradient(90deg,rgba(107,118,134,.16),transparent)}
+  .row .ttl{font-size:16px;font-weight:600}
+  .row .meta{font-size:12.5px;color:var(--text-2);margin-top:2px}
+  .row .chev{margin-left:auto;color:var(--text-3);font-size:18px}
+
+  .pulse-dot{width:12px;height:12px;border-radius:50%;flex:none;position:relative}
+  .pulse-dot.active{background:var(--active);box-shadow:0 0 0 4px rgba(47,212,167,.16)}
+  .pulse-dot.cooling{background:var(--cooling);box-shadow:0 0 0 4px rgba(246,178,60,.14)}
+  .pulse-dot.cold{background:var(--cold)}
+  .days{font-family:var(--font-round);font-weight:700;font-size:15px;margin-left:auto;
+    display:flex;flex-direction:column;align-items:flex-end;line-height:1}
+  .days small{font-size:9px;font-weight:600;color:var(--text-3);letter-spacing:.08em;
+    text-transform:uppercase;margin-top:3px}
+  .days.active{color:var(--active)} .days.cooling{color:var(--cooling)} .days.cold{color:var(--cold)}
+
+  .ring-wrap{display:flex;align-items:center;gap:16px;background:var(--surface);
+    border:1px solid var(--hairline);border-radius:var(--r-card);padding:18px}
+  .ring-num{font-family:var(--font-round);font-weight:800;font-size:13px}
+
+  .task{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--hairline)}
+  .task:last-child{border-bottom:0}
+  .check{width:21px;height:21px;border-radius:50%;border:2px solid var(--text-3);flex:none;cursor:pointer}
+  .check.done{background:var(--active);border-color:var(--active);position:relative}
+  .check.done::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+    border:solid #0E1116;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .task .t{font-size:15px}
+  .task.is-done .t{color:var(--text-3);text-decoration:line-through}
+
+  .addbar{display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--surface-2);
+    border:1px dashed var(--hairline);border-radius:var(--r-row);margin-bottom:14px}
+  .addbar .ph{color:var(--text-3);font-size:15px}
+  .addbar .plus{color:var(--accent);font-size:20px;font-weight:600}
+
+  .banner{background:linear-gradient(135deg,rgba(107,118,134,.22),rgba(107,118,134,.06));
+    border:1px solid var(--hairline);border-radius:var(--r-card);padding:15px 16px;margin-bottom:16px}
+  .banner .bt{font-size:14px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+  .banner .bb{font-size:13px;color:var(--text-2)}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:13px;
+    width:100%;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--font-ui)}
+  .btn.ghost{background:var(--surface-2);color:var(--accent)}
+
+  .tabbar{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(20,24,30,.92);
+    backdrop-filter:blur(20px);border-top:1px solid var(--hairline);
+    display:flex;z-index:40;padding-bottom:14px}
+  .tab{flex:1;border:0;background:none;color:var(--text-3);cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:11px;
+    font-size:10px;font-weight:600;font-family:var(--font-ui)}
+  .tab svg{width:25px;height:25px}
+  .tab.on{color:var(--accent)}
+
+  .sheet-scrim{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:70;opacity:0;
+    pointer-events:none;transition:opacity .25s}
+  .sheet-scrim.open{opacity:1;pointer-events:auto}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);
+    border-radius:var(--r-sheet) var(--r-sheet) 0 0;z-index:71;transform:translateY(100%);
+    transition:transform .34s cubic-bezier(.32,.72,0,1);padding:10px 18px 26px;max-height:88%;overflow-y:auto}
+  .sheet.open{transform:translateY(0)}
+  @media (prefers-reduced-motion:reduce){.sheet,.sheet-scrim{transition:none!important}}
+  .grabber{width:38px;height:5px;border-radius:3px;background:var(--surface-3);margin:6px auto 14px}
+  .sheet-h{display:flex;align-items:center;margin-bottom:18px}
+  .sheet-h .ttl{font-size:18px;font-weight:700;flex:1;text-align:center}
+  .sheet-h button{background:none;border:0;color:var(--accent);font-size:16px;cursor:pointer;font-family:var(--font-ui)}
+  .field{background:var(--surface-2);border:1px solid var(--hairline);border-radius:12px;
+    padding:14px;font-size:16px;color:var(--text-3);margin-bottom:16px}
+  .swatches{display:flex;gap:12px;margin-bottom:8px}
+  .sw{width:34px;height:34px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+  .sw.sel{border-color:#fff}
+
+  .ai-action{display:flex;align-items:center;gap:13px;padding:15px;background:var(--surface-2);
+    border:1px solid var(--hairline);border-radius:var(--r-row);margin-bottom:11px;cursor:pointer}
+  .ai-action .ai-t{font-size:15px;font-weight:600}
+  .ai-action .ai-d{font-size:12.5px;color:var(--text-2);margin-top:2px}
+  .ai-result{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--hairline)}
+  .ai-result:last-child{border-bottom:0}
+  .ai-pick{width:21px;height:21px;border-radius:6px;border:2px solid var(--accent);flex:none}
+  .ai-pick.on{background:var(--accent)}
+
+  .ipad{width:1000px;height:680px;background:var(--bg);border-radius:26px;border:12px solid #20262F;
+    overflow:hidden;display:flex;box-shadow:0 30px 70px -20px rgba(0,0,0,.7);max-width:100%}
+  .col{height:100%;overflow-y:auto}
+  .col.sidebar{width:264px;background:var(--surface);border-right:1px solid var(--hairline);flex:none;padding:14px 10px}
+  .col.content{width:340px;border-right:1px solid var(--hairline);flex:none}
+  .col.detail{flex:1;background:#0C1014}
+  .side-h{color:var(--text-3);font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;padding:14px 12px 6px}
+  .side-row{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:10px;
+    font-size:14.5px;cursor:pointer;color:var(--text)}
+  .side-row:hover{background:var(--surface-2)}
+  .side-row.sel{background:rgba(91,141,239,.18);color:var(--accent);font-weight:600}
+  .side-row .sd{margin-left:auto}
+
+  .gallery{display:flex;gap:34px;flex-wrap:wrap;align-items:flex-start}
+  .mini{width:280px}
+  .mini .iphone{width:280px;height:596px;border-radius:40px}
+  .mini .screens{inset:36px 0 0 0}
+  .mini .statusbar{height:36px}
+  .onb{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:30px 26px}
+  .onb .demo{display:flex;gap:14px;margin:26px 0}
+  .onb h2{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .onb p{color:var(--text-2);font-size:14.5px;margin-bottom:8px}
+
+  .widget{background:var(--surface);border:1px solid var(--hairline);border-radius:22px;padding:16px;margin-bottom:18px}
+  .widget .wl{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:10px}
+  .widget .wbig{font-family:var(--font-round);font-weight:800;font-size:30px;color:var(--cold)}
+
+  .swiftnote{background:var(--surface);border:1px solid var(--hairline);border-left:3px solid var(--accent);
+    border-radius:10px;padding:11px 14px;font-size:12.5px;color:var(--text-2);margin-top:14px}
+  .swiftnote code{color:var(--accent);font-family:var(--font-round)}
+  a.dl{color:var(--accent)}
+</style>
+
+<!--
+  The full mockup body (iPhone + iPad + gallery sections) is preserved verbatim
+  from the original demo. Open this file in any browser to view the interactive
+  reference. Source: chat-pasted demo; saved here so future sessions can re-render.
+-->
+
+<div class="page">
+  <div class="doc-h">Momentum</div>
+  <div class="doc-sub">UI &amp; flow reference for building the SwiftUI app — <b>iPhone</b> (interactive: tap tabs, open an initiative, try the sheets) and <b>iPad</b> (split view). Styled to iOS conventions so the translation to SwiftUI is close to direct. Shown in dark; <b>build both appearances</b>.</div>
+
+  <div class="legend">
+    <div class="item"><span class="dot" style="background:var(--active)"></span> Active · 0–2 days</div>
+    <div class="item"><span class="dot" style="background:var(--cooling)"></span> Cooling · 3–6 days</div>
+    <div class="item"><span class="dot" style="background:var(--cold)"></span> Cold · 7+ days</div>
+    <div class="note">The pulse is the signature: same vital-signs language on every screen.</div>
+  </div>
+
+  <div class="section-eyebrow">iPhone · compact</div>
+  <div class="stage">
+    <div>
+      <div class="iphone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀙇 􀛨</span></div>
+        <div class="screens" id="phoneScreens">
+
+          <section class="screen active" data-screen="today">
+            <div class="large-title">Today</div>
+            <div class="body-pad">
+              <div class="banner">
+                <div class="bt">⚠︎ Needs attention</div>
+                <div class="bb">Content has gone quiet — 11 days. One small step brings it back.</div>
+              </div>
+              <div class="group-h">Suggested focus</div>
+              <div class="group">
+                <div class="task"><span class="check"></span><span class="t">Outline next CoreLearnly post</span><span class="pulse-dot cooling" style="margin-left:auto"></span></div>
+                <div class="task"><span class="check"></span><span class="t">Record 1 short for Content</span><span class="pulse-dot cold" style="margin-left:auto"></span></div>
+                <div class="task"><span class="check"></span><span class="t">Confirm Swift Pune S003 venue</span><span class="pulse-dot cooling" style="margin-left:auto"></span></div>
+              </div>
+              <div class="group-h">Quick add</div>
+              <div class="addbar"><span class="plus">+</span><span class="ph">New task…</span></div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="initiatives">
+            <div class="navbar"><button class="nav-action" onclick="openSheet('sheetNew')">􀅼 New</button></div>
+            <div class="large-title">Initiatives</div>
+            <div class="body-pad">
+              <div class="group">
+                <button class="row attention" onclick="drillIn()">
+                  <span class="pulse-dot cold"></span>
+                  <span><span class="ttl">Content</span><div class="meta">2 open · YouTube + blog</div></span>
+                  <span class="days cold">11<small>days</small></span><span class="chev">›</span>
+                </button>
+                <button class="row" onclick="drillIn()">
+                  <span class="pulse-dot cooling"></span>
+                  <span><span class="ttl">CoreLearnly</span><div class="meta">5 open · DSA course</div></span>
+                  <span class="days cooling">5<small>days</small></span><span class="chev">›</span>
+                </button>
+                <button class="row" onclick="drillIn()">
+                  <span class="pulse-dot cooling"></span>
+                  <span><span class="ttl">Swift Pune S003</span><div class="meta">3 open · talk + lab</div></span>
+                  <span class="days cooling">4<small>days</small></span><span class="chev">›</span>
+                </button>
+                <button class="row" onclick="drillIn()">
+                  <span class="pulse-dot active"></span>
+                  <span><span class="ttl">Fitness</span><div class="meta">1 open · phase 2</div></span>
+                  <span class="days active">1<small>day</small></span><span class="chev">›</span>
+                </button>
+                <button class="row" onclick="drillIn()">
+                  <span class="pulse-dot active"></span>
+                  <span><span class="ttl">MTailor experiments</span><div class="meta">4 open · side R&amp;D</div></span>
+                  <span class="days active">0<small>today</small></span><span class="chev">›</span>
+                </button>
+              </div>
+              <div class="caption" style="margin-top:14px;color:var(--text-3)">Sorted stalest-first — the dying thing floats up on its own.</div>
+            </div>
+          </section>
+
+          <section class="screen push" data-screen="detail">
+            <div class="navbar">
+              <button class="back" onclick="popOut()">‹ Initiatives</button>
+              <button class="nav-action" onclick="openSheet('sheetAI')">􀟫 Assist</button>
+            </div>
+            <div class="body-pad">
+              <div class="ring-wrap">
+                <svg width="62" height="62" viewBox="0 0 62 62">
+                  <circle cx="31" cy="31" r="26" fill="none" stroke="#262C36" stroke-width="6"/>
+                  <circle cx="31" cy="31" r="26" fill="none" stroke="var(--cooling)" stroke-width="6"
+                    stroke-linecap="round" stroke-dasharray="163" stroke-dashoffset="70" transform="rotate(-90 31 31)"/>
+                </svg>
+                <div>
+                  <div style="font-size:22px;font-weight:800;letter-spacing:-.01em">CoreLearnly</div>
+                  <div style="color:var(--cooling);font-family:var(--font-round);font-weight:700;font-size:13px;margin-top:3px">Cooling · 5 days since activity</div>
+                </div>
+              </div>
+
+              <div class="addbar" style="margin-top:16px"><span class="plus">+</span><span class="ph">Add task…</span></div>
+
+              <div class="group-h">Open</div>
+              <div class="group">
+                <div class="task"><span class="check"></span><span class="t">Outline mini-course module 3</span></div>
+                <div class="task"><span class="check"></span><span class="t">Write array two-pointer post</span></div>
+                <div class="task"><span class="check"></span><span class="t">Record intro video</span></div>
+              </div>
+              <div class="group-h">Done</div>
+              <div class="group">
+                <div class="task is-done"><span class="check done"></span><span class="t">Set up Supabase MCP</span></div>
+                <div class="task is-done"><span class="check done"></span><span class="t">Draft teaching-voice prompt</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="momentum">
+            <div class="large-title">Momentum</div>
+            <div class="body-pad">
+              <div class="group" style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:18px;border-radius:16px">
+                <div style="text-align:center">
+                  <svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="#262C36" stroke-width="7"/><circle cx="37" cy="37" r="30" fill="none" stroke="var(--cold)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="170" transform="rotate(-90 37 37)"/></svg>
+                  <div class="ring-num" style="color:var(--cold);margin-top:6px">Content · 11d</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="#262C36" stroke-width="7"/><circle cx="37" cy="37" r="30" fill="none" stroke="var(--cooling)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="90" transform="rotate(-90 37 37)"/></svg>
+                  <div class="ring-num" style="color:var(--cooling);margin-top:6px">CoreLearnly · 5d</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="#262C36" stroke-width="7"/><circle cx="37" cy="37" r="30" fill="none" stroke="var(--cooling)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="78" transform="rotate(-90 37 37)"/></svg>
+                  <div class="ring-num" style="color:var(--cooling);margin-top:6px">Swift Pune · 4d</div>
+                </div>
+                <div style="text-align:center">
+                  <svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="#262C36" stroke-width="7"/><circle cx="37" cy="37" r="30" fill="none" stroke="var(--active)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="20" transform="rotate(-90 37 37)"/></svg>
+                  <div class="ring-num" style="color:var(--active);margin-top:6px">Fitness · 1d</div>
+                </div>
+              </div>
+
+              <div class="group-h">14-day activity</div>
+              <div class="group" style="padding:18px 16px">
+                <div style="display:flex;align-items:flex-end;gap:5px;height:74px">
+                  <i style="flex:1;background:var(--surface-3);height:30%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:55%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--accent);height:80%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:20%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--accent);height:65%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--accent);height:95%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:15%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:40%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--accent);height:70%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:25%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--accent);height:60%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:35%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--surface-3);height:50%;border-radius:3px"></i>
+                  <i style="flex:1;background:var(--accent);height:85%;border-radius:3px"></i>
+                </div>
+                <div style="display:flex;justify-content:space-between;color:var(--text-3);font-size:11px;margin-top:8px"><span>2 weeks ago</span><span>Today</span></div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="sheet-scrim" id="scrim" onclick="closeSheet()"></div>
+
+        <div class="sheet" id="sheetNew">
+          <div class="grabber"></div>
+          <div class="sheet-h"><button onclick="closeSheet()">Cancel</button><span class="ttl">New initiative</span><button style="font-weight:700">Add</button></div>
+          <div class="field">Name</div>
+          <div class="group-h">Color</div>
+          <div class="swatches">
+            <span class="sw sel" style="background:#5B8DEF"></span>
+            <span class="sw" style="background:#2FD4A7"></span>
+            <span class="sw" style="background:#F6B23C"></span>
+            <span class="sw" style="background:#FF6B6B"></span>
+            <span class="sw" style="background:#A77BF0"></span>
+            <span class="sw" style="background:#4FB6E0"></span>
+          </div>
+          <div class="caption" style="margin:6px 0 0">Sheet at <code>.medium</code> detent · name field focused on appear · Add disabled until non-empty.</div>
+        </div>
+
+        <div class="sheet" id="sheetAI">
+          <div class="grabber"></div>
+          <div class="sheet-h"><button onclick="closeSheet()">Close</button><span class="ttl">􀟫 Assist</span><span style="width:42px"></span></div>
+          <div class="ai-action"><span style="color:var(--accent);font-size:18px">􀤍</span><div><div class="ai-t">Break it down</div><div class="ai-d">Turn a goal into concrete next steps</div></div></div>
+          <div class="ai-action"><span style="color:var(--accent);font-size:18px">􀙭</span><div><div class="ai-t">What should I focus on?</div><div class="ai-d">Today's 1–3 moves across initiatives</div></div></div>
+          <div class="ai-action"><span style="color:var(--accent);font-size:18px">􀉅</span><div><div class="ai-t">Weekly review</div><div class="ai-d">What moved, what stalled, one revival step</div></div></div>
+          <div class="group-h">Suggested tasks</div>
+          <div class="group" style="margin-bottom:16px">
+            <div class="ai-result"><span class="ai-pick on"></span><span class="t" style="font-size:14.5px">Define module 3 learning objectives</span></div>
+            <div class="ai-result"><span class="ai-pick on"></span><span class="t" style="font-size:14.5px">Draft 3 practice problems</span></div>
+            <div class="ai-result"><span class="ai-pick"></span><span class="t" style="font-size:14.5px">Record a 2-min teaser</span></div>
+          </div>
+          <button class="btn">Add 2 selected</button>
+          <div class="caption" style="margin:10px 0 0">On-device · Foundation Models · <code>@Generable</code> returns the typed task list. Nothing is written until you confirm.</div>
+        </div>
+
+        <div class="tabbar">
+          <button class="tab on" data-tab="today" onclick="showTab('today',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>
+            Today</button>
+          <button class="tab" data-tab="initiatives" onclick="showTab('initiatives',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="4" rx="1.5"/><rect x="4" y="14" width="16" height="4" rx="1.5"/></svg>
+            Initiatives</button>
+          <button class="tab" data-tab="momentum" onclick="showTab('momentum',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13h4l2-7 4 14 2-7h8"/></svg>
+            Momentum</button>
+        </div>
+      </div>
+      <div class="device-label">Tap a tab · open an initiative · try New / Assist</div>
+    </div>
+
+    <div style="flex:1;min-width:240px;padding-top:6px">
+      <div class="swiftnote"><b style="color:var(--text)">Tab bar</b> → <code>TabView</code>. Each tab is a <code>NavigationStack</code>.</div>
+      <div class="swiftnote"><b style="color:var(--text)">Initiatives → Detail</b> → <code>NavigationLink</code> push within the stack.</div>
+      <div class="swiftnote"><b style="color:var(--text)">New / Assist</b> → <code>.sheet</code> with <code>.presentationDetents</code>.</div>
+      <div class="swiftnote"><b style="color:var(--text)">Rows + sections</b> → <code>List</code> with grouped style; pulse dot is a <code>Circle</code>; days readout is <code>Text</code> in <code>.rounded</code> design.</div>
+      <div class="swiftnote"><b style="color:var(--text)">Pulse ring</b> → <code>Circle().trim(from:to:).stroke(...)</code> — same idea as the SVG arc here.</div>
+      <div class="swiftnote"><b style="color:var(--text)">Checkbox tap</b> animates and calls <code>registerActivity()</code> on the parent initiative.</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">iPad · regular · split view</div>
+  <div class="ipad">
+    <div class="col sidebar">
+      <div class="side-h">Momentum</div>
+      <div class="side-row">􀉹 Today</div>
+      <div class="side-row">􀋂 Momentum</div>
+      <div class="side-h">Initiatives</div>
+      <div class="side-row attention" style="display:flex"><span class="pulse-dot cold"></span> Content <span class="sd days cold" style="font-size:13px">11d</span></div>
+      <div class="side-row sel"><span class="pulse-dot cooling"></span> CoreLearnly <span class="sd days cooling" style="font-size:13px">5d</span></div>
+      <div class="side-row"><span class="pulse-dot cooling"></span> Swift Pune S003 <span class="sd days cooling" style="font-size:13px">4d</span></div>
+      <div class="side-row"><span class="pulse-dot active"></span> Fitness <span class="sd days active" style="font-size:13px">1d</span></div>
+      <div class="side-row"><span class="pulse-dot active"></span> MTailor experiments <span class="sd days active" style="font-size:13px">0d</span></div>
+      <div class="side-h" style="margin-top:18px">&nbsp;</div>
+      <div class="side-row">􀣋 Settings</div>
+    </div>
+
+    <div class="col content">
+      <div class="navbar" style="padding:16px 18px 6px"><span style="font-size:20px;font-weight:800">CoreLearnly</span><button class="nav-action">􀅼</button></div>
+      <div class="body-pad">
+        <div class="group-h">Open</div>
+        <div class="group">
+          <div class="task" style="cursor:pointer"><span class="check"></span><span class="t">Outline mini-course module 3</span></div>
+          <div class="task" style="background:rgba(91,141,239,.14)"><span class="check"></span><span class="t">Write array two-pointer post</span></div>
+          <div class="task"><span class="check"></span><span class="t">Record intro video</span></div>
+        </div>
+        <div class="group-h">Done</div>
+        <div class="group">
+          <div class="task is-done"><span class="check done"></span><span class="t">Set up Supabase MCP</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col detail">
+      <div class="body-pad" style="padding:24px 22px">
+        <div class="ring-wrap" style="background:var(--surface);flex-direction:column;align-items:flex-start;gap:14px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="#262C36" stroke-width="6"/><circle cx="27" cy="27" r="22" fill="none" stroke="var(--cooling)" stroke-width="6" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="58" transform="rotate(-90 27 27)"/></svg>
+            <div><div style="font-size:18px;font-weight:700">Write array two-pointer post</div><div style="color:var(--cooling);font-size:12.5px;font-family:var(--font-round);font-weight:700;margin-top:3px">CoreLearnly · cooling · 5d</div></div>
+          </div>
+        </div>
+        <div class="group-h">Notes</div>
+        <div class="group" style="padding:16px;color:var(--text-3);font-size:14px">Brute-force first, then optimize. Strategic Hinglish in the walkthrough.</div>
+        <div class="group-h">Created</div>
+        <div class="group" style="padding:14px 16px;font-size:14px;color:var(--text-2)">3 days ago</div>
+      </div>
+    </div>
+  </div>
+  <div class="device-label" style="text-align:left;margin-left:4px">Three columns → <code style="color:var(--accent);font-family:var(--font-round)">NavigationSplitView</code>: sidebar (initiatives + sections) · content (task list) · detail (selected task). Same data, reorganized for the canvas.</div>
+
+  <div class="section-eyebrow">Other screens</div>
+  <div class="gallery">
+
+    <div class="mini">
+      <div class="iphone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀛨</span></div>
+        <div class="screens"><section class="screen active"><div class="onb">
+          <div class="demo">
+            <span class="pulse-dot active" style="width:18px;height:18px"></span>
+            <span class="pulse-dot cooling" style="width:18px;height:18px"></span>
+            <span class="pulse-dot cold" style="width:18px;height:18px"></span>
+          </div>
+          <h2>Some things you start go quiet.</h2>
+          <p>Momentum gives every initiative a pulse, so you see what's fading before it's gone.</p>
+          <p style="color:var(--text-3);font-size:13px;margin-top:14px">Active · cooling · cold</p>
+          <button class="btn" style="margin-top:auto;max-width:230px">Create your first initiative</button>
+        </div></section></div>
+      </div>
+      <div class="device-label">Onboarding</div>
+    </div>
+
+    <div class="mini">
+      <div class="iphone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀛨</span></div>
+        <div class="screens"><section class="screen active">
+          <div class="large-title" style="font-size:26px">Settings</div>
+          <div class="body-pad">
+            <div class="group-h">Appearance</div>
+            <div class="group"><div class="row" style="cursor:default"><span class="ttl" style="font-weight:500;font-size:15px">Theme</span><span style="margin-left:auto;color:var(--text-2);font-size:14px">System ›</span></div></div>
+            <div class="group-h">Pulse</div>
+            <div class="group">
+              <div class="row" style="cursor:default"><span style="font-size:15px">Cooling after</span><span style="margin-left:auto;color:var(--text-2);font-size:14px">3 days ›</span></div>
+              <div class="row" style="cursor:default"><span style="font-size:15px">Cold after</span><span style="margin-left:auto;color:var(--text-2);font-size:14px">7 days ›</span></div>
+            </div>
+            <div class="group-h">Notifications</div>
+            <div class="group"><div class="row" style="cursor:default"><span style="font-size:15px">Going-cold alerts</span><span style="margin-left:auto;width:42px;height:25px;background:var(--active);border-radius:13px;position:relative"><i style="position:absolute;right:2px;top:2px;width:21px;height:21px;background:#fff;border-radius:50%"></i></span></div></div>
+            <div class="group-h">iCloud</div>
+            <div class="group"><div class="row" style="cursor:default"><span class="pulse-dot active"></span><span style="font-size:15px">Synced</span><span style="margin-left:auto;color:var(--text-3);font-size:13px">just now</span></div></div>
+          </div>
+        </section></div>
+      </div>
+      <div class="device-label">Settings</div>
+    </div>
+
+    <div class="mini" style="width:280px">
+      <div style="background:linear-gradient(160deg,#1a2533,#0d141d);border-radius:30px;padding:30px 26px;border:1px solid var(--hairline)">
+        <div class="widget" style="width:150px">
+          <div class="wl">Going cold</div>
+          <div class="wbig">11d</div>
+          <div style="font-size:13px;color:var(--text);margin-top:4px">Content</div>
+        </div>
+        <div class="widget" style="margin-bottom:0">
+          <div class="wl">Stalest initiatives</div>
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><span class="pulse-dot cold"></span><span style="font-size:13px;flex:1">Content</span><span class="days cold" style="font-size:13px">11d</span></div>
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><span class="pulse-dot cooling"></span><span style="font-size:13px;flex:1">CoreLearnly</span><span class="days cooling" style="font-size:13px">5d</span></div>
+          <div style="display:flex;align-items:center;gap:9px"><span class="pulse-dot cooling"></span><span style="font-size:13px;flex:1">Swift Pune</span><span class="days cooling" style="font-size:13px">4d</span></div>
+        </div>
+      </div>
+      <div class="device-label">Home-screen widgets (small + medium)</div>
+    </div>
+  </div>
+
+  <p class="caption" style="margin-top:34px">Mock data uses your real initiatives on purpose — it's the dogfood. Colors, thresholds, and copy are all easy to redirect; tell me what to change and I'll regenerate.</p>
+</div>
+
+<script>
+  function showTab(name, el){
+    document.querySelectorAll('#phoneScreens .screen').forEach(s=>{
+      if(s.classList.contains('push')) s.classList.remove('active');
+      s.classList.toggle('active', s.dataset.screen===name);
+    });
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    el.classList.add('on');
+  }
+  function drillIn(){ document.querySelector('[data-screen="detail"]').classList.add('active'); }
+  function popOut(){ document.querySelector('[data-screen="detail"]').classList.remove('active'); }
+  function openSheet(id){ document.getElementById('scrim').classList.add('open'); document.getElementById(id).classList.add('open'); }
+  function closeSheet(){ document.getElementById('scrim').classList.remove('open'); document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open')); }
+</script>
