@@ -74,8 +74,8 @@ flowchart TB
     Intents["App Intents / Widgets · P7"]
   end
 
-  UI -->|reads via @Query| Container
-  UI -->|.environment| State
+  UI -->|"reads via @Query"| Container
+  UI -->|".environment"| State
   State --> Container
   Container --> Initiative
   Container --> Task
