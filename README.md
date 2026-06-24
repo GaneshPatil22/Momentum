@@ -8,7 +8,7 @@
   <img alt="UI" src="https://img.shields.io/badge/UI-SwiftUI-blueviolet">
   <img alt="Persistence" src="https://img.shields.io/badge/Persistence-SwiftData%20%2B%20CloudKit-success">
   <img alt="AI" src="https://img.shields.io/badge/AI-Foundation%20Models%20%28on--device%29-lightgrey">
-  <img alt="Status" src="https://img.shields.io/badge/status-pre--P1-yellow">
+  <img alt="Status" src="https://img.shields.io/badge/status-P1.5%20shipped%20%C2%B7%20P2%20next-success">
 </p>
 
 ---
@@ -220,8 +220,9 @@ First-party Apple frameworks only. The cost of a third-party library — version
 
 | Phase | Theme | Status |
 |---|---|---|
-| **P1** | Core loop on iPhone — list / detail / create + minimal pulse | 🚧 not started |
-| **P2** | iPad + adaptive | ⏳ |
+| **P1** | Core loop on iPhone — list / detail / create + minimal pulse | ✅ done |
+| **P1.5** | Visual polish + light mode (matches [mockup](docs/mockup.html)) | ✅ done |
+| **P2** | iPad + adaptive | ⏳ next |
 | **P3** | CloudKit sync | ⏳ |
 | **P4** | Momentum visuals (pulse rings, dashboard) | ⏳ |
 | **P5** | Today + nudges (notifications) | ⏳ |
@@ -229,7 +230,7 @@ First-party Apple frameworks only. The cost of a third-party library — version
 | **P7** | Widgets, Shortcuts, accessibility, ship | ⏳ |
 | **P8** | Optional — macOS, tests, modularization | ⏳ |
 
-Detailed deliverables, surfaces practiced, and exit criteria for each phase: [docs/PHASES.md](docs/PHASES.md).
+Build log of what's already shipped: [docs/PROGRESS.md](docs/PROGRESS.md). Detailed deliverables and exit criteria for each phase: [docs/PHASES.md](docs/PHASES.md).
 
 ---
 
@@ -265,7 +266,10 @@ Adjust `-destination` to a simulator that exists locally — `xcrun simctl list 
 | [docs/SPEC.md](docs/SPEC.md) | Source of truth for features, screens, copy, out-of-scope. |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architectural choices, component & class diagrams, folder layout, concurrency. |
 | [docs/DATA-MODEL.md](docs/DATA-MODEL.md) | Entities, ER diagram, SwiftData sketches, activity rules, CloudKit constraints. |
+| [docs/UI-REFERENCE.md](docs/UI-REFERENCE.md) | Design tokens, component vocabulary, screen breakdown — extracted from the HTML mockup. |
 | [docs/PHASES.md](docs/PHASES.md) | P1–P8 with deliverables and exit criteria. |
+| [docs/PROGRESS.md](docs/PROGRESS.md) | Build log — what's shipped, when, with verification notes. |
+| [docs/mockup.html](docs/mockup.html) | Interactive HTML reference (open in any browser). |
 
 ---
 

@@ -5,8 +5,8 @@
 | Phase | Theme | Status |
 |---|---|---|
 | [P1](#p1--core-loop-on-iphone) | Core loop on iPhone | ✅ done |
-| [P1.5](#p15--visual-polish--light-mode) | Visual polish + light mode (matches [mockup.html](mockup.html)) | in progress |
-| [P2](#p2--ipad--adaptive) | iPad / adaptive | not started |
+| [P1.5](#p15--visual-polish--light-mode) | Visual polish + light mode (matches [mockup.html](mockup.html)) | ✅ done |
+| [P2](#p2--ipad--adaptive) | iPad / adaptive | ⏳ next |
 | [P3](#p3--cloudkit-sync) | CloudKit sync | not started |
 | [P4](#p4--momentum-visuals) | Momentum visuals | not started |
 | [P5](#p5--today--nudges) | Today + nudges | not started |
