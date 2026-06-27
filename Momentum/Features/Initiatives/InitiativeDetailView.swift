@@ -78,10 +78,10 @@ struct InitiativeDetailView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(initiative.name)
-                    .font(.system(size: 22, weight: .heavy))
+                    .font(.system(.title2, weight: .heavy))
                     .foregroundStyle(AppColor.text)
                 Text(headerStatus(pulse: pulse, days: days))
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .bold))
                     .foregroundStyle(pulse.color)
             }
             Spacer()
@@ -104,7 +104,7 @@ struct InitiativeDetailView: View {
 
     private func sectionHeader(_ title: String) -> some View {
         Text(title)
-            .font(.system(size: 12, weight: .semibold))
+            .font(.system(.caption, weight: .semibold))
             .tracking(0.6)
             .textCase(.uppercase)
             .foregroundStyle(AppColor.text3)

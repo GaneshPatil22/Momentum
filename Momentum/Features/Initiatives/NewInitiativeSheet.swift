@@ -12,9 +12,20 @@ struct NewInitiativeSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
 
-    @State private var name: String = ""
-    @State private var selectedColor: String = ColorPalette.presets[0]
+    /// When non-nil the sheet edits an existing initiative; otherwise it creates a new one.
+    private let editing: Initiative?
+
+    @State private var name: String
+    @State private var selectedColor: String
     @FocusState private var nameFocused: Bool
+
+    init(editing: Initiative? = nil) {
+        self.editing = editing
+        _name = State(initialValue: editing?.name ?? "")
+        _selectedColor = State(initialValue: editing?.colorHex ?? ColorPalette.presets[0])
+    }
+
+    private var isEditing: Bool { editing != nil }
 
     var body: some View {
         NavigationStack {
@@ -29,19 +40,19 @@ struct NewInitiativeSheet: View {
                     colorGrid
                 }
             }
-            .navigationTitle("New initiative")
+            .navigationTitle(isEditing ? "Edit initiative" : "New initiative")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add", action: commit)
+                    Button(isEditing ? "Save" : "Add", action: commit)
                         .disabled(trimmedName.isEmpty)
                         .fontWeight(.semibold)
                 }
             }
-            .onAppear { nameFocused = true }
+            .onAppear { if !isEditing { nameFocused = true } }
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
@@ -75,8 +86,14 @@ struct NewInitiativeSheet: View {
 
     private func commit() {
         guard !trimmedName.isEmpty else { return }
-        let initiative = Initiative(name: trimmedName, colorHex: selectedColor)
-        context.insert(initiative)
+        if let editing {
+            // Rename / recolor is not forward motion — leave lastActivityAt untouched.
+            editing.name = trimmedName
+            editing.colorHex = selectedColor
+        } else {
+            let initiative = Initiative(name: trimmedName, colorHex: selectedColor)
+            context.insert(initiative)
+        }
         try? context.save()
         dismiss()
     }

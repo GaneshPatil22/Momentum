@@ -19,13 +19,17 @@ struct InitiativeRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(initiative.name)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(.body, weight: .semibold))
+                    .lineLimit(2)
                 Text("^[\(openTaskCount) open](inflect: true)")
-                    .font(.system(size: 12.5))
+                    .font(.caption)
                     .foregroundStyle(AppColor.text2)
             }
 
-            Spacer()
+            Spacer(minLength: 8)
+
+            Sparkline(values: ActivityHistory.counts(for: initiative.tasks, days: 14), color: pulse.color)
+                .frame(width: 46, height: 22)
 
             DaysSinceLabel(days: days, pulse: pulse)
         }

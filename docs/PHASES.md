@@ -6,10 +6,10 @@
 |---|---|---|
 | [P1](#p1--core-loop-on-iphone) | Core loop on iPhone | ✅ done |
 | [P1.5](#p15--visual-polish--light-mode) | Visual polish + light mode (matches [mockup.html](mockup.html)) | ✅ done |
-| [P2](#p2--ipad--adaptive) | iPad / adaptive | ⏳ next |
-| [P3](#p3--cloudkit-sync) | CloudKit sync | not started |
-| [P4](#p4--momentum-visuals) | Momentum visuals | not started |
-| [P5](#p5--today--nudges) | Today + nudges | not started |
+| [P2](#p2--ipad--adaptive) | iPad / adaptive | ✅ done |
+| [P3](#p3--cloudkit-sync) | CloudKit sync | 🔧 code-complete (sync verify pending) |
+| [P4](#p4--momentum-visuals) | Momentum visuals | ✅ done |
+| [P5](#p5--today--nudges) | Today + nudges | 🔧 code-complete (notif/BG verify pending) |
 | [P6](#p6--ai-assist) | AI Assist | not started |
 | [P7](#p7--widgets-shortcuts-ally-ship) | Widgets, Shortcuts, a11y, ship | not started |
 | [P8](#p8--optional) | Optional (Mac, tests, modularization) | not started |
@@ -67,9 +67,11 @@ Full details and deltas in [UI-REFERENCE.md](UI-REFERENCE.md).
 
 ---
 
-## P2 — iPad / adaptive
+## P2 — iPad / adaptive ✅
 
 Same app, second form factor. The point is responsive layout, not new features.
+
+> Shipped 2026-06-27. Build log in [PROGRESS.md § P2](PROGRESS.md#p2--ipad--adaptive-2026-06-27).
 
 **Deliverables**
 - `NavigationSplitView` with sidebar (Initiatives) + content (detail).
@@ -83,9 +85,11 @@ Same app, second form factor. The point is responsive layout, not new features.
 
 ---
 
-## P3 — CloudKit sync
+## P3 — CloudKit sync 🔧
 
 Two devices, same iCloud, same data. No accounts, no UI screens — just configuration + a status indicator.
+
+> Code landed 2026-06-27 (build log in [PROGRESS.md § P3](PROGRESS.md#p3--cloudkit-sync-2026-06-27)). The container, `SyncStatusService`, and status indicator are in place behind a **local-fallback scaffold** — the app runs local-only until the iCloud capability is enabled. **Remaining (manual, owner-only):** add iCloud→CloudKit + Background Modes→Remote notifications capabilities and a Development Team in Xcode, then verify two-device sync. Until then the exit criteria below are unmet.
 
 **Deliverables**
 - `ModelContainer` configured with CloudKit private DB.
@@ -100,9 +104,11 @@ Two devices, same iCloud, same data. No accounts, no UI screens — just configu
 
 ---
 
-## P4 — Momentum visuals
+## P4 — Momentum visuals ✅
 
 The visual payoff. This is the phase that earns the app its name.
+
+> Shipped 2026-06-27. Build log in [PROGRESS.md § P4](PROGRESS.md#p4--momentum-visuals-2026-06-27).
 
 **Deliverables**
 - `PulseRing` component: animated ring (`Canvas` + phase/keyframe animation) honoring Reduce Motion.
@@ -118,9 +124,11 @@ The visual payoff. This is the phase that earns the app its name.
 
 ---
 
-## P5 — Today + nudges
+## P5 — Today + nudges 🔧
 
 Triage + the first push the user gets from outside the app.
+
+> Code landed 2026-06-28 (build log in [PROGRESS.md § P5](PROGRESS.md#p5--today--nudges-2026-06-28)). `TodayView`, cold-nudge scheduling (quiet-hours aware, deduped), and notification→detail deep linking are done and foreground-verified. **Remaining (manual / on-device):** add Background Modes + a `BGTaskSchedulerPermittedIdentifiers` Info.plist entry to enable the daily background sweep (it self-disables until then), and verify notification delivery + tap on a real device.
 
 **Deliverables**
 - `TodayView` — Attention banner (cold initiatives), suggested-focus list (heuristic: stalest initiative's oldest open task), quick-add.

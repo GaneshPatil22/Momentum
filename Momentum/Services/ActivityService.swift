@@ -18,12 +18,19 @@ final class ActivityService {
 
     func registerActivity(for initiative: Initiative) {
         initiative.lastActivityAt = .now
+        // Fresh activity ends the cold episode — re-arm the nudge for next time.
+        initiative.coldNotified = false
     }
 
     @discardableResult
     func addTask(_ title: String, to initiative: Initiative) -> TaskItem {
         let task = TaskItem(title: title, initiative: initiative)
         context.insert(task)
+        // Adding work to an archived initiative brings it back to life.
+        if initiative.isArchived {
+            initiative.isArchived = false
+            initiative.archivedAt = nil
+        }
         registerActivity(for: initiative)
         persist()
         return task

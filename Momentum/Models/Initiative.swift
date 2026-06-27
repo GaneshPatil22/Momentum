@@ -17,6 +17,10 @@ final class Initiative {
     var createdAt: Date = Date()
     var lastActivityAt: Date = Date()
     var isArchived: Bool = false
+    /// When the initiative was archived (auto or manual); nil while live. Drives the archive list sort.
+    var archivedAt: Date? = nil
+    /// True once we've sent the "gone cold" nudge for the current cold episode. Reset on any activity.
+    var coldNotified: Bool = false
 
     @Relationship(deleteRule: .cascade, inverse: \TaskItem.initiative)
     var tasks: [TaskItem] = []
