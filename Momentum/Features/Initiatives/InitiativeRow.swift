@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct InitiativeRow: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let initiative: Initiative
 
     var body: some View {
@@ -21,15 +23,18 @@ struct InitiativeRow: View {
                 Text(initiative.name)
                     .font(.system(.body, weight: .semibold))
                     .lineLimit(2)
-                Text("^[\(openTaskCount) open](inflect: true)")
+                Text("\(openTaskCount) open")
                     .font(.caption)
                     .foregroundStyle(AppColor.text2)
             }
 
             Spacer(minLength: 8)
 
-            Sparkline(values: ActivityHistory.counts(for: initiative.tasks, days: 14), color: pulse.color)
-                .frame(width: 46, height: 22)
+            // The sparkline is decorative; drop it at accessibility sizes to keep the row readable.
+            if !dynamicTypeSize.isAccessibilitySize {
+                Sparkline(values: ActivityHistory.counts(for: initiative.tasks, days: 14), color: pulse.color)
+                    .frame(width: 46, height: 22)
+            }
 
             DaysSinceLabel(days: days, pulse: pulse)
         }

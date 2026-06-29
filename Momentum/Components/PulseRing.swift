@@ -21,7 +21,7 @@ struct PulseRing: View {
     init(
         pulse: Pulse,
         days: Int,
-        thresholds: PulseThresholds = .default,
+        thresholds: PulseThresholds = .current,
         size: CGFloat = 62,
         showsDays: Bool = false
     ) {

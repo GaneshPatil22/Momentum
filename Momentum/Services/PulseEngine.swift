@@ -15,7 +15,7 @@ enum PulseEngine {
     static func coldInitiatives(
         _ initiatives: [Initiative],
         now: Date = .now,
-        thresholds: PulseThresholds = .default
+        thresholds: PulseThresholds = .current
     ) -> [Initiative] {
         initiatives.filter { $0.pulse(now: now, thresholds: thresholds) == .cold }
     }

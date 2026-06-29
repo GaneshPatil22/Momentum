@@ -1,0 +1,258 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ pulse" : {
+
+    },
+    "%@, %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@, %3$@"
+          }
+        }
+      }
+    },
+    "%@, %@, %lld days since activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@, %3$lld days since activity"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld days quiet. One small step brings it back." : {
+
+    },
+    "%lld open" : {
+
+    },
+    "^[%lld day](inflect: true)" : {
+
+    },
+    "^[%lld move](inflect: true) in %lld days" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "^[%1$lld move](inflect: true) in %2$lld days"
+          }
+        }
+      }
+    },
+    "14d" : {
+
+    },
+    "30d" : {
+
+    },
+    "About" : {
+
+    },
+    "Add" : {
+
+    },
+    "Add an initiative to start tracking what you're keeping alive." : {
+
+    },
+    "Add initiative" : {
+
+    },
+    "Add initiatives and check off tasks — your rings and activity chart show up here." : {
+
+    },
+    "Add the first thing you're trying to keep alive." : {
+
+    },
+    "All clear" : {
+
+    },
+    "App" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Archive" : {
+
+    },
+    "Archive is empty" : {
+
+    },
+    "Archive, %lld new" : {
+
+    },
+    "Archived initiatives" : {
+
+    },
+    "Assist unavailable" : {
+
+    },
+    "Break it down" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Change color" : {
+
+    },
+    "Cold after" : {
+
+    },
+    "Cold nudges" : {
+
+    },
+    "Color" : {
+
+    },
+    "Complete %@" : {
+
+    },
+    "Completed" : {
+
+    },
+    "Continue" : {
+
+    },
+    "Cooling after" : {
+
+    },
+    "Couldn't generate" : {
+
+    },
+    "Day" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Done" : {
+
+    },
+    "e.g. Learn Korean" : {
+
+    },
+    "Edit initiative" : {
+
+    },
+    "Finished initiatives archive themselves after %lld quiet days. Add a task to bring one back." : {
+
+    },
+    "Finished initiatives land here automatically once they've been quiet for %lld days." : {
+
+    },
+    "Focus for today" : {
+
+    },
+    "Get started" : {
+
+    },
+    "How long without activity before an initiative cools, then goes cold." : {
+
+    },
+    "iCloud" : {
+
+    },
+    "Initiatives" : {
+
+    },
+    "Momentum" : {
+
+    },
+    "More coming…" : {
+
+    },
+    "Moves" : {
+
+    },
+    "Name" : {
+
+    },
+    "New initiative" : {
+
+    },
+    "No momentum yet" : {
+
+    },
+    "No open tasks. What's the next small step?" : {
+
+    },
+    "Nothing open right now. Add a small next step below." : {
+
+    },
+    "Nothing yet" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "Nudges that would land during quiet hours are held until the window ends." : {
+
+    },
+    "OK" : {
+
+    },
+    "Open" : {
+
+    },
+    "Pick something from the list to see its tasks." : {
+
+    },
+    "Pulse" : {
+
+    },
+    "Quiet from" : {
+
+    },
+    "Quiet until" : {
+
+    },
+    "Rename" : {
+
+    },
+    "Restore" : {
+
+    },
+    "Save" : {
+
+    },
+    "Select an initiative" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Suggestions only — nothing is saved until you add it." : {
+
+    },
+    "Theme" : {
+
+    },
+    "Thinking…" : {
+
+    },
+    "Today" : {
+
+    },
+    "Try again" : {
+
+    },
+    "Version" : {
+
+    },
+    "Weekly review" : {
+
+    },
+    "Window" : {
+
+    }
+  },
+  "version" : "1.0"
+}

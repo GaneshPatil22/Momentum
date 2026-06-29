@@ -34,7 +34,10 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     // MARK: - Cold sweep
 
     /// Schedule a nudge for every newly-cold, live, not-yet-notified initiative.
-    func sweepColdNotifications(now: Date = .now, thresholds: PulseThresholds = .default) {
+    func sweepColdNotifications(now: Date = .now, thresholds: PulseThresholds = .current) {
+        // Respect the master notifications toggle in Settings.
+        guard UserDefaults.standard.bool(forKey: SettingsKey.notificationsEnabled, default: true) else { return }
+
         let descriptor = FetchDescriptor<Initiative>(
             predicate: #Predicate { !$0.isArchived }
         )
@@ -60,7 +63,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
         content.userInfo = ["initiativeID": initiative.id.uuidString]
 
         let trigger: UNNotificationTrigger
-        if let fireDate = QuietHours.standard.deferIfNeeded(now), fireDate > now {
+        if let fireDate = QuietHours.current.deferIfNeeded(now), fireDate > now {
             let comps = Calendar.current.dateComponents(
                 [.year, .month, .day, .hour, .minute, .second], from: fireDate
             )
@@ -107,6 +110,15 @@ struct QuietHours {
     var endHour: Int     // exclusive, 24h
 
     static let standard = QuietHours(startHour: 22, endHour: 8)
+
+    /// The user's configured window (Settings), falling back to `.standard`.
+    static var current: QuietHours {
+        let defaults = UserDefaults.standard
+        return QuietHours(
+            startHour: defaults.int(forKey: SettingsKey.quietStartHour, default: standard.startHour),
+            endHour: defaults.int(forKey: SettingsKey.quietEndHour, default: standard.endHour)
+        )
+    }
 
     private var spansMidnight: Bool { startHour > endHour }
 

@@ -16,6 +16,7 @@ struct InitiativeDetailView: View {
 
     @State private var newTaskTitle: String = ""
     @FocusState private var newTaskFocused: Bool
+    @State private var assistMode: AssistMode?
 
     var body: some View {
         let pulse = initiative.pulse()
@@ -70,6 +71,16 @@ struct InitiativeDetailView: View {
         }
         .navigationTitle(initiative.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Break it down", systemImage: "sparkles") {
+                    assistMode = .breakDown(initiative)
+                }
+            }
+        }
+        .sheet(item: $assistMode) { mode in
+            AIAssistSheet(mode: mode, candidates: [initiative])
+        }
     }
 
     private func header(pulse: Pulse, days: Int) -> some View {

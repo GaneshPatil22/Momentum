@@ -20,6 +20,8 @@ struct TodayView: View {
 
     @State private var quickAddText = ""
     @FocusState private var quickAddFocused: Bool
+    @State private var assistMode: AssistMode?
+    @State private var showingSettings = false
 
     var body: some View {
         NavigationStack {
@@ -43,6 +45,26 @@ struct TodayView: View {
                 }
             }
             .navigationTitle("Today")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Settings", systemImage: "gearshape") {
+                        showingSettings = true
+                    }
+                }
+                if !initiatives.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Focus for today", systemImage: "sparkles") {
+                            assistMode = .focusToday
+                        }
+                    }
+                }
+            }
+            .sheet(item: $assistMode) { mode in
+                AIAssistSheet(mode: mode, candidates: Array(initiatives))
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
+            }
         }
     }
 

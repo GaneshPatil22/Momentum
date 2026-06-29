@@ -78,16 +78,17 @@ struct InitiativesListView: View {
         Button {
             showingArchive = true
         } label: {
+            // Frame gives the badge room so the toolbar doesn't clip it.
             Image(systemName: "archivebox")
+                .frame(width: 30, height: 26, alignment: .center)
                 .overlay(alignment: .topTrailing) {
                     if unseenArchivedCount > 0 {
                         Text("\(unseenArchivedCount)")
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 4)
                             .frame(minWidth: 16, minHeight: 16)
                             .background(Circle().fill(Color.red))
-                            .offset(x: 9, y: -9)
                     }
                 }
         }

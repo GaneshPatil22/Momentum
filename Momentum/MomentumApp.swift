@@ -18,6 +18,7 @@ struct MomentumApp: App {
     let archiveService: ArchiveService
     let notificationService: NotificationService
     let router: AppRouter
+    let aiAssist: AIAssistService
 
     init() {
         let schema = Schema([Initiative.self, TaskItem.self])
@@ -46,6 +47,14 @@ struct MomentumApp: App {
         archiveService = ArchiveService(context: container.mainContext)
         notificationService = NotificationService(context: container.mainContext)
         router = AppRouter(context: container.mainContext)
+        aiAssist = AIAssistService()
+
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-seedSampleData") {
+            SampleData.seed(into: container.mainContext)
+            UserDefaults.standard.set(true, forKey: SettingsKey.hasOnboarded)
+        }
+        #endif
 
         // Notification taps deep-link into the matching initiative.
         let router = router
@@ -83,5 +92,6 @@ struct MomentumApp: App {
         .environment(activityService)
         .environment(syncStatus)
         .environment(archiveService)
+        .environment(aiAssist)
     }
 }

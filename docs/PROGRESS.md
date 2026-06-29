@@ -14,8 +14,8 @@
 | **P3** | CloudKit sync | 🔧 code-complete · sync verify pending | 2026-06-27 |
 | **P4** | Momentum visuals | ✅ done | 2026-06-27 |
 | **P5** | Today + nudges | 🔧 code-complete · notif/BG verify pending | 2026-06-28 |
-| **P6** | AI Assist | ⏳ next | — |
-| **P7** | Widgets, Shortcuts, a11y, ship | ⏳ | — |
+| **P6** | AI Assist | 🔧 code-complete · on-device AI verify pending | 2026-06-28 |
+| **P7** | Widgets, Shortcuts, a11y, ship | 🔧 partial · Settings/a11y/onboarding/l10n done | 2026-06-29 |
 | **P8** | Optional (Mac, tests, modularization) | ⏳ | — |
 
 ---
@@ -288,8 +288,81 @@ Triage in one screen + the first push from outside the app. Following the P3 pat
 
 ---
 
+## P6 — AI Assist *(2026-06-28)*
+
+On-device LLM (Foundation Models), three concrete jobs, **never autonomous** — the model only ever suggests; the user explicitly accepts before anything is written.
+
+### What landed
+
+**`AIAssistService`** (`Services/AIAssistService.swift`, new)
+- Wraps `SystemLanguageModel.default`. `isAvailable` + `unavailableMessage` map the availability reasons (device not eligible / Apple Intelligence off / model not ready) to friendly copy.
+- `@Generable SuggestionList { [Suggestion] }`, `@Generable Suggestion { initiative, title }` with `@Guide` descriptions → parseable suggestion lists.
+- `AssistMode` (`.breakDown(Initiative)` / `.focusToday` / `.weeklyReview`) with per-mode `instructions` + `prompt` builders (prompts embed initiative names, days-since-activity, open tasks, and pulse). `resolve(_:in:)` maps a model-returned name back to a real `Initiative`.
+
+**`AIAssistSheet`** (`Features/AIAssist/AIAssistSheet.swift`, new)
+- Opens a `LanguageModelSession` and **streams** via `streamResponse(to:generating:)`, updating rows from each `partial.content` snapshot ("Thinking…" → rows fill in).
+- On finish, pre-selects every actionable suggestion; tapping toggles selection. **"Add N"** commits only the selected rows via `ActivityService.addTask` — the single mutation chokepoint. Unresolved names render disabled ("not found").
+- Graceful **unavailable** and **error** states (with Try again). The model never writes directly.
+
+**Entry points** — `sparkles` buttons: Initiative detail → *Break it down*; Today → *Focus for today*; Momentum → *Weekly review*. `AIAssistService` injected at the app root.
+
+### Key design choices
+- **Suggest, then accept — never write.** The sheet only ever calls `ActivityService` on explicit "Add", satisfying the no-autonomous-writes rule by construction.
+- **Stream the structured type, gate selection on completion.** Rows appear as they generate (responsive), but selection/commit unlocks only once the list is final — avoids identity churn from growing partial snapshots.
+- **Names round-trip through resolution.** The model echoes initiative names; we map them back to objects and disable anything that doesn't match, so a hallucinated name can't create an orphan task.
+- **Reused `ActivityService`** for commits, so AI-added tasks reset the pulse exactly like manual ones.
+
+### Verification
+- `xcodebuild` clean on iPhone 17 Pro — the Foundation Models surface (availability enum, `@Generable`/`@Guide`, session, `streamResponse`, `PartiallyGenerated`) all compile.
+- Launched on simulator without crash; `SystemLanguageModel.default` reports unavailable there, so the sheet shows the graceful unavailable state (the simulator has no Apple Intelligence).
+
+### Remaining before P6 exit criteria are met *(on-device)*
+- On an Apple-Intelligence-capable device: confirm streaming feels responsive and the three jobs produce sensible suggestions. (Foundation Models can't run in the simulator.)
+
+### Deferred (intentional)
+- Tool-calling / letting the model read live data itself — prompts carry a snapshot instead.
+- Streaming a free-text weekly-review summary alongside the revival tasks — current output is the actionable list only.
+
+---
+
+## P7 (partial) — Settings, accessibility, onboarding, localization *(2026-06-29)*
+
+The buildable slice of the publish phase. Widgets and App Intents/Shortcuts were **deferred by request** (they need new Xcode targets); icon + App Store metadata remain.
+
+### What landed
+
+**Settings** (`Features/Settings/SettingsView.swift`, new) + `Services/AppSettings.swift` (new)
+- Real Settings screen (gear on the Today toolbar): appearance (System/Light/Dark), **user-tunable pulse thresholds** (cooling/cold steppers), notifications toggle + **quiet-hours** pickers, iCloud status row (from `SyncStatusService`), archived-initiatives link (reuses `ArchiveListView`), and About/version.
+- The thresholds and quiet hours that were hardcoded `.default` in P1–P5 now read from `UserDefaults` via `PulseThresholds.current` / `QuietHours.current`; the cold-nudge sweep also honors the notifications toggle. `AppearanceSetting` drives `.preferredColorScheme` at the root.
+
+**Accessibility** (`DaysSinceLabel`, `InitiativeRow`)
+- Converted the last fixed-size text (`DaysSinceLabel`) to text-style-relative fonts so it scales to XXL; the decorative row sparkline is dropped at accessibility sizes to keep rows legible. (Pulse VoiceOver labels, Reduce-Motion-aware rings, and scalable type elsewhere were already in place from earlier phases.)
+
+**Onboarding** (`Features/Onboarding/OnboardingView.swift`, new)
+- Two-page first-launch cover (shown once via `SettingsKey.hasOnboarded`): the pulse mechanic (Active/Cooling/Cold) and "only forward motion counts / it archives itself." Ends in *Get started*.
+
+**Localization** (`Momentum/Localizable.xcstrings`, new)
+- Empty String Catalog so Xcode extracts every `Text("…")` literal; English baseline, ready for translations.
+
+### Key design choices
+- **Single source for tunables.** `PulseThresholds.current` / `QuietHours.current` read `UserDefaults`, so existing default-parameter call sites pick up user settings with no plumbing.
+- **Settings as a sheet, not a 4th tab.** Keeps the three-tab shape from the mockup; a gear is the conventional home.
+- **Onboarding is pure explanation.** It hands off to the existing empty-state ("Add the first thing…") rather than forcing initiative creation inline.
+
+### Verification
+- `xcodebuild` clean on iPhone 17 Pro throughout.
+- Screenshotted the Settings screen (appearance picker, pulse steppers, quiet-hours, iCloud status — verified and fixed an inflection-markup bug) via a temporary root, then reverted `ContentView`.
+- Screenshotted onboarding on a fresh install (pulse dots + paging + Continue).
+
+### Notes / still open
+- Reactivity: changing thresholds in Settings updates new pulse reads, but already-rendered rows refresh on next data change rather than instantly (acceptable; full live-rethemeing would mean threading thresholds through the environment).
+- The notification auth prompt currently fires during onboarding (app-level `.task`); harmless but could be deferred to post-onboarding later.
+- **Deferred by request:** Widgets, App Intents/Shortcuts (new targets). **Open:** app icon, screenshots, App Store metadata.
+
+---
+
 ## What's next
 
-**P6 — AI Assist.** On-device LLM (Foundation Models), never autonomous: *Break it down* (goal → 3–6 next actions), *Focus for today* (stale initiatives + open tasks → 1–3 suggested moves), *Weekly review* (what moved / stalled + one revival step per cold initiative). `@Generable` types for parseable suggestion lists; an Assist sheet streams rows in; "Add selected" commits via `ActivityService`. The model never writes directly — every suggestion needs explicit accept; graceful disable when the model's unavailable.
+**Remaining work** (see the project-status list): finish the device/capability verification debt (P3 CloudKit, P5 notifications/BG, P6 on-device AI), then optionally a **test target** (P8) covering the now-substantial pure logic (`PulseEngine`, `ActivityHistory`, `QuietHours`, `shouldAutoArchive`), and finally the ship essentials (icon, screenshots, metadata). Widgets + App Intents remain available whenever new Xcode targets are welcome.
 
-Full P6 brief in [PHASES.md § P6](PHASES.md#p6--ai-assist).
+Full P7 brief in [PHASES.md § P7](PHASES.md#p7--widgets-shortcuts-ally-ship).

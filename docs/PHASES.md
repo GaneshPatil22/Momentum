@@ -10,8 +10,8 @@
 | [P3](#p3--cloudkit-sync) | CloudKit sync | 🔧 code-complete (sync verify pending) |
 | [P4](#p4--momentum-visuals) | Momentum visuals | ✅ done |
 | [P5](#p5--today--nudges) | Today + nudges | 🔧 code-complete (notif/BG verify pending) |
-| [P6](#p6--ai-assist) | AI Assist | not started |
-| [P7](#p7--widgets-shortcuts-ally-ship) | Widgets, Shortcuts, a11y, ship | not started |
+| [P6](#p6--ai-assist) | AI Assist | 🔧 code-complete (on-device AI verify pending) |
+| [P7](#p7--widgets-shortcuts-ally-ship) | Widgets, Shortcuts, a11y, ship | 🔧 partial (Settings/a11y/onboarding/l10n done) |
 | [P8](#p8--optional) | Optional (Mac, tests, modularization) | not started |
 
 ---
@@ -143,9 +143,11 @@ Triage + the first push the user gets from outside the app.
 
 ---
 
-## P6 — AI Assist
+## P6 — AI Assist 🔧
 
 On-device LLM, three concrete jobs, never autonomous.
+
+> Code landed 2026-06-28 (build log in [PROGRESS.md § P6](PROGRESS.md#p6--ai-assist-2026-06-28)). `AIAssistService` (Foundation Models), the three `@Generable` jobs, and the streaming `AIAssistSheet` are built and compile; graceful-unavailable is verified on the simulator. **Remaining:** verify streaming + suggestion quality on an Apple-Intelligence-capable device (Foundation Models doesn't run in the simulator).
 
 **Deliverables**
 - `AIAssistService` backed by Foundation Models.
@@ -162,9 +164,11 @@ On-device LLM, three concrete jobs, never autonomous.
 
 ---
 
-## P7 — Widgets, Shortcuts, a11y, ship
+## P7 — Widgets, Shortcuts, a11y, ship 🔧
 
 The polish-and-publish phase.
+
+> Partially shipped 2026-06-29 (build log in [PROGRESS.md § P7](PROGRESS.md#p7-partial--settings-accessibility-onboarding-localization-2026-06-29)). **Done:** Settings screen (incl. user-tunable pulse thresholds + quiet hours), accessibility pass, onboarding, localization scaffolding. **Deferred by request:** Widgets + App Intents/Shortcuts (need new Xcode targets). **Still open:** icon, screenshots, App Store metadata.
 
 **Deliverables**
 - **Widgets** — Small (coldest initiative), Medium (top 3 stalest). Deep-link via App Intents.

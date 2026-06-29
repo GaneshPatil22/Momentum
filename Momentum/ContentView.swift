@@ -10,10 +10,12 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(AppRouter.self) private var router
+    @AppStorage(SettingsKey.appearance) private var appearance = AppearanceSetting.system.rawValue
+    @AppStorage(SettingsKey.hasOnboarded) private var hasOnboarded = false
 
     var body: some View {
         @Bindable var router = router
-        TabView(selection: $router.selectedTab) {
+        return TabView(selection: $router.selectedTab) {
             Tab("Today", systemImage: "sun.max", value: AppRouter.Tab.today) {
                 TodayView()
             }
@@ -25,6 +27,10 @@ struct ContentView: View {
             }
         }
         .tint(AppColor.accent)
+        .preferredColorScheme(AppearanceSetting(rawValue: appearance)?.colorScheme)
+        .fullScreenCover(isPresented: .init(get: { !hasOnboarded }, set: { hasOnboarded = !$0 })) {
+            OnboardingView()
+        }
     }
 }
 

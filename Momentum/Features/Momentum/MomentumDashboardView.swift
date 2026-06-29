@@ -17,6 +17,7 @@ struct MomentumDashboardView: View {
     private var initiatives: [Initiative]
 
     @State private var window = 14
+    @State private var assistMode: AssistMode?
     @Namespace private var ringNamespace
 
     var body: some View {
@@ -37,9 +38,21 @@ struct MomentumDashboardView: View {
                 }
             }
             .navigationTitle("Momentum")
+            .toolbar {
+                if !initiatives.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Weekly review", systemImage: "sparkles") {
+                            assistMode = .weeklyReview
+                        }
+                    }
+                }
+            }
             .navigationDestination(for: Initiative.self) { initiative in
                 InitiativeDetailView(initiative: initiative)
                     .navigationTransition(.zoom(sourceID: initiative.id, in: ringNamespace))
+            }
+            .sheet(item: $assistMode) { mode in
+                AIAssistSheet(mode: mode, candidates: Array(initiatives))
             }
         }
     }

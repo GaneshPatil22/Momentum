@@ -19,11 +19,11 @@ struct DaysSinceLabel: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: 3) {
             Text("\(days)")
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(.callout, design: .rounded).weight(.bold))
                 .monospacedDigit()
                 .foregroundStyle(numberColor)
             Text(subscriptText)
-                .font(.system(size: 9, weight: .semibold, design: .rounded))
+                .font(.system(.caption2, design: .rounded).weight(.semibold))
                 .tracking(0.7)
                 .foregroundStyle(AppColor.text3)
         }
