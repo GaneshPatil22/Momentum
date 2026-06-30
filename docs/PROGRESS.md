@@ -361,6 +361,15 @@ The buildable slice of the publish phase. Widgets and App Intents/Shortcuts were
 
 ---
 
+## App icon + launch screen *(2026-06-29)*
+
+The app had no icon (blank in the catalog) and a blank generated launch screen that flashed for a couple of seconds. Both addressed.
+
+- **App icon** — a blue→teal gradient with a white pulse-ring mark (open ring + a rounded "pulse head"), rendered at 1024² by a Core Graphics script (`/tmp/genicon.swift`). Three appearance variants wired in `AppIcon.appiconset`: **any** (gradient bg + white ring), **dark** (`#0E1116` bg + gradient ring), **tinted** (transparent + white ring). Verified on the simulator home screen.
+- **Launch screen** — replaced `UILaunchScreen_Generation` with a branded **`LaunchScreen.storyboard`**: app-bg color (`LaunchBackground` colorset, light/dark) + centered ring logo (`LaunchLogo` imageset). Set via `INFOPLIST_KEY_UILaunchStoryboardName` (both configs). Verified mid-launch — dark background with centered logo instead of a blank flash.
+
+---
+
 ## What's next
 
 **Remaining work** (see the project-status list): finish the device/capability verification debt (P3 CloudKit, P5 notifications/BG, P6 on-device AI), then optionally a **test target** (P8) covering the now-substantial pure logic (`PulseEngine`, `ActivityHistory`, `QuietHours`, `shouldAutoArchive`), and finally the ship essentials (icon, screenshots, metadata). Widgets + App Intents remain available whenever new Xcode targets are welcome.

@@ -74,7 +74,7 @@ struct MomentumApp: App {
         WindowGroup {
             ContentView()
                 .environment(router)
-                .task { await notificationService.requestAuthorization() }
+                .environment(notificationService)
                 .onChange(of: scenePhase, initial: true) { _, phase in
                     switch phase {
                     case .active:

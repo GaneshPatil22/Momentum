@@ -37,7 +37,7 @@ struct OnboardingView: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 24)
         }
-        .background(AppColor.bg)
+        .background(AppColor.bg.ignoresSafeArea())
     }
 
     // MARK: - Pages
